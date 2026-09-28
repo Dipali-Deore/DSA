@@ -1,27 +1,13 @@
 class Solution {
 public:
     int findDuplicate(vector<int>& nums) {
+        unordered_set<int>st;
 
-        int slow = nums[0];
-        int fast = nums[0];
-
-        // Phase 1: Find intersection
-        do
+        for(int x:nums)
         {
-            slow = nums[slow];
-            fast = nums[nums[fast]];
+            if(st.count(x)) return x;
+            st.insert(x);
         }
-        while(slow != fast);
-
-        // Phase 2: Find entrance of cycle
-        slow = nums[0];
-
-        while(slow != fast)
-        {
-            slow = nums[slow];
-            fast = nums[fast];
-        }
-
-        return slow;
+        return -1;
     }
 };
