@@ -1,49 +1,54 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
 class Solution {
+private:
+    ListNode* rev(ListNode* head)
+    {
+        ListNode* prev=nullptr;
+        ListNode* curr=head;
+
+        while(curr!=nullptr)
+        {
+            ListNode* forr=curr->next;
+            curr->next=prev;
+            prev=curr;
+            curr=forr;
+        }
+        return prev;
+    }
 public:
     void reorderList(ListNode* head) {
+        ListNode* slow=head;
+        ListNode* fast=head;
 
-        if(head == nullptr || head->next == nullptr)
-            return;
-
-        // Step 1: Find middle
-        ListNode* slow = head;
-        ListNode* fast = head;
-
-        while(fast->next && fast->next->next)
+        while(fast!=nullptr && fast->next!=nullptr)
         {
-            slow = slow->next;
-            fast = fast->next->next;
+            fast=fast->next->next;
+            slow=slow->next;
         }
 
-        // Step 2: Split the list
-        ListNode* second = slow->next;
-        slow->next = nullptr;
+        ListNode* trave=rev(slow->next);
+        slow->next=nullptr;
+        slow=head;
 
-        // Step 3: Reverse second half
-        ListNode* prev = nullptr;
-
-        while(second)
+        while(slow!=nullptr && trave!=nullptr)
         {
-            ListNode* next = second->next;
-            second->next = prev;
-            prev = second;
-            second = next;
-        }
+            ListNode* t1=slow->next;
+            ListNode* t2=trave->next;
 
-        // Step 4: Merge two halves
-        ListNode* first = head;
-        second = prev;
+            slow->next=trave;
+            trave->next=t1;
 
-        while(second)
-        {
-            ListNode* temp1 = first->next;
-            ListNode* temp2 = second->next;
-
-            first->next = second;
-            second->next = temp1;
-
-            first = temp1;
-            second = temp2;
+            slow=t1;
+            trave=t2;
         }
     }
 };
